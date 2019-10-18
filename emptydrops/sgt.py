@@ -63,13 +63,13 @@ def simple_good_turing(xr, xnr):
 
     # Determine when to switch from GT to LGT estimates
     tursd = np.ones(len(xr))
-    for i in xrange(len(xr)):
+    for i in range(len(xr)):
         if xrtry[i]:
             tursd[i] = float(i+2) / xnr[i] * np.sqrt(xnr[i+1] * (1 + xnr[i+1]/xnr[i]))
 
     xrstcmbrel = np.zeros(len(xr))
     useturing = True
-    for r in xrange(len(xr)):
+    for r in range(len(xr)):
         if not useturing:
             xrstcmbrel[r]  = xrstrel[r]
         else:

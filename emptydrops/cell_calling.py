@@ -56,7 +56,7 @@ def eval_multinomial_loglikelihoods(matrix, profile_p, max_mem_gb=0.1):
 
     loglk = np.zeros(num_bcs)
 
-    for chunk_start in xrange(0, num_bcs, bcs_per_chunk):
+    for chunk_start in range(0, num_bcs, bcs_per_chunk):
         chunk = slice(chunk_start, chunk_start+bcs_per_chunk)
         matrix_chunk = matrix[:,chunk].transpose().toarray()
         n = matrix_chunk.sum(1)
@@ -97,7 +97,7 @@ def simulate_multinomial_loglikelihoods(profile_p, umis_per_bc,
 
     log_profile_p = np.log(profile_p)
 
-    for sim_idx in xrange(num_sims):
+    for sim_idx in range(num_sims):
         if verbose and sim_idx % 100 == 99:
             sys.stdout.write('.')
             sys.stdout.flush()
@@ -107,7 +107,7 @@ def simulate_multinomial_loglikelihoods(profile_p, umis_per_bc,
 
         loglk[0, sim_idx] = curr_loglk
 
-        for i in xrange(1, len(distinct_n)):
+        for i in range(1, len(distinct_n)):
             step = distinct_n[i] - distinct_n[i-1]
             if step >= jump:
                 # Instead of iterating for each n, sample the intermediate ns all at once
@@ -116,7 +116,7 @@ def simulate_multinomial_loglikelihoods(profile_p, umis_per_bc,
                 assert not np.isnan(curr_loglk)
             else:
                 # Iteratively sample between the two distinct values of n
-                for n in xrange(distinct_n[i-1]+1, distinct_n[i]+1):
+                for n in range(distinct_n[i-1]+1, distinct_n[i]+1):
                     j = sampled_features[k]
                     k += 1
                     if k >= n_sample_feature_block:
@@ -155,7 +155,7 @@ def compute_ambient_pvalues(umis_per_bc, obs_loglk, sim_n, sim_loglk):
 
     pvalues = np.zeros(num_barcodes)
 
-    for i in xrange(num_barcodes):
+    for i in range(num_barcodes):
         num_lower_loglk = np.sum(sim_loglk[sim_n_idx[i],:] < obs_loglk[i])
         pvalues[i] = float(1 + num_lower_loglk) / (1 + num_sims)
     return pvalues
