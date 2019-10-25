@@ -5,6 +5,7 @@
 
 """ Functions for calling cell-associated barcodes """
 
+import sys
 from collections import namedtuple
 import numpy as np
 import numpy.ma as ma
@@ -231,7 +232,7 @@ def find_nonambient_barcodes(matrix, orig_cell_bcs,
     bc_order = np.argsort(umis_per_bc)
 
     # Take what we expect to be the barcodes associated w/ empty partitions.
-    empty_bcs = bc_order[::-1][(N_PARTITIONS/2):N_PARTITIONS]
+    empty_bcs = bc_order[::-1][(N_PARTITIONS//2):N_PARTITIONS]
     empty_bcs.sort()
 
     # Require non-zero barcodes

@@ -114,7 +114,7 @@ def sgt_proportions(frequencies):
 
     # rstar contains the smoothed frequencies.
     # Map each original frequency r to its smoothed rstar.
-    rstar_dict = dict(itertools.izip(use_freqs, rstar))
+    rstar_dict = dict(zip(use_freqs, rstar))
 
     rstar_sum = np.sum(freqfreqs[use_freqs] * rstar)
     rstar_i = np.fromiter((rstar_dict[f] for f in frequencies),
