@@ -6,9 +6,12 @@ minimal modifications for packaging and running under python3.
 
 ## Usage:
 ```
-import emptydrops
+from emptydrops import find_nonambient_barcodes
+from emptydrops.matrix import CountMatrix
 
-emptydrops.find_nonambient_barcodes(
+matrix = CountMatrix.from_legacy_mtx(mtx_dir)
+
+find_nonambient_barcodes(
     matrix,          # Full expression matrix
     orig_cell_bcs,   # (iterable of str): Strings of initially-called cell barcodes
     min_umi_frac_of_median=0.01,
