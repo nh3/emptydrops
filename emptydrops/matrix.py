@@ -2,18 +2,13 @@
 #
 # Copyright (c) 2018 10X Genomics, Inc. All rights reserved.
 #
-from collections import OrderedDict
-import copy
 import h5py as h5
-import itertools
 import json
 import numpy as np
 import scipy.io as sp_io
 import os
 import pandas as pd
 pd.set_option("compute.use_numexpr", False)
-import shutil
-import tables
 import scipy.sparse as sp_sparse
 import gzip
 import _io as io
@@ -68,15 +63,20 @@ def open_maybe_gzip(filename, mode='r'):
 
 def save_features_tsv(feature_ref, base_dir, compress, legacy=True):
     """Save a FeatureReference to a tsv file"""
-    out_features_fn = os.path.join(base_dir, 'genes.tsv' if legacy else 'features.tsv')
-    if compress:
-        out_features_fn += '.gz'
-
-    with open_maybe_gzip(out_features_fn, 'w') as f:
-        for feature_def in feature_ref.feature_defs:
-            f.write('\t'.join((feature_def.id,
-                               feature_def.name,
-                               feature_def.feature_type)) + '\n')
+    if legacy:
+        out_features_fn = os.path.join(base_dir, 'genes.tsv')
+        with open_maybe_gzip(out_features_fn, 'w') as f:
+            for feature_def in feature_ref.feature_defs:
+                f.write('\t'.join((feature_def.id, feature_def.name)) + '\n')
+    else:
+        out_features_fn = os.path.join(base_dir, 'features.tsv')
+        if compress:
+            out_features_fn += '.gz'
+        with open_maybe_gzip(out_features_fn, 'w') as f:
+            for feature_def in feature_ref.feature_defs:
+                f.write('\t'.join((feature_def.id,
+                                   feature_def.name,
+                                   feature_def.feature_type)) + '\n')
 
 
 class CountMatrix(object):
@@ -117,7 +117,7 @@ class CountMatrix(object):
         genes = adata.var_names.values
         feature_defs = [FeatureDef(idx, gene_id, None, "Gene Expression", []) for (idx, gene_id) in enumerate(genes)]
         feature_ref = FeatureReference(feature_defs, [])
-        matrix = adata.X.T
+        matrix = adata.X.T.astype(int)
         if type(matrix) is not sp_sparse.csc_matrix:
             matrix = matrix.tocsc()
         mat = CountMatrix(feature_ref, barcodes, matrix)
@@ -132,8 +132,8 @@ class CountMatrix(object):
             if not os.path.exists(filepath):
                 raise IOError("Required file not found: %s" % filepath)
         barcodes = pd.read_csv(barcodes_tsv, delimiter='\t', header=None, usecols=[0]).values.squeeze()
-        genes = pd.read_csv(genes_tsv, delimiter='\t', header=None, usecols=[0]).values.squeeze()
-        feature_defs = [FeatureDef(idx, gene_id, None, "Gene Expression", []) for (idx, gene_id) in enumerate(genes)]
+        genes = pd.read_csv(genes_tsv, delimiter='\t', header=None, usecols=[0, 1], names=['gene_id', 'name'])
+        feature_defs = [FeatureDef(idx, row['gene_id'], row['name'], "Gene Expression", []) for idx, row in genes.iterrows()]
         feature_ref = FeatureReference(feature_defs, [])
 
         matrix = sp_io.mmread(matrix_mtx)
@@ -240,7 +240,7 @@ class CountMatrix(object):
         value = sorted(reads_per_bc, reverse=True)[index]
         return np.nonzero(reads_per_bc >= value)[0]
 
-    def save_mex(self, base_dir, save_features_func=save_features_tsv, metadata=None, compress=True):
+    def save_mex(self, base_dir, save_features_func=save_features_tsv, metadata=None, compress=True, legacy=True):
         """Save in Matrix Market Exchange format.
         Args:
           base_dir (str): Path to directory to write files in.
@@ -274,9 +274,9 @@ class CountMatrix(object):
         })
 
         metadata_str = json.dumps(metadata)
-        comment = 'metadata_json: %s' % metadata_str
+        comment = '' if legacy else 'metadata_json: %s' % metadata_str
 
-        with open_maybe_gzip(out_matrix_fn, 'w') as stream:
+        with open_maybe_gzip(out_matrix_fn, 'wb') as stream:
             # write initial header line
             stream.write(np.compat.asbytes('%%MatrixMarket matrix {0} {1} {2}\n'.format(rep, field, symmetry)))
 
@@ -287,12 +287,12 @@ class CountMatrix(object):
             # write shape spec
             stream.write(np.compat.asbytes('%i %i %i\n' % (rows, cols, self.m.nnz)))
             # write row, col, val in 1-based indexing
-            for r, c, d in itertools.izip(self.m.row+1, self.m.col+1, self.m.data):
+            for r, c, d in zip(self.m.row+1, self.m.col+1, self.m.data):
                 stream.write(np.compat.asbytes(("%i %i %i\n" % (r, c, d))))
 
         # both GEX and ATAC provide an implementation of this in respective feature_ref.py
-        save_features_func(self.feature_ref, base_dir, compress=compress)
+        save_features_func(self.feature_ref, base_dir, compress=compress, legacy=legacy)
 
-        with open_maybe_gzip(out_barcodes_fn, 'w') as f:
+        with open_maybe_gzip(out_barcodes_fn, 'wb') as f:
             for bc in self.bcs:
-                f.write(bc + '\n')
+                f.write(bc + b'\n')
