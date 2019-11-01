@@ -102,7 +102,7 @@ def sgt_proportions(frequencies):
     if np.count_nonzero(frequencies) != len(frequencies):
         raise ValueError("Frequencies must be greater than zero")
 
-    freqfreqs = np.bincount(frequencies)
+    freqfreqs = np.bincount(frequencies.astype(int))
     assert freqfreqs[0] == 0
     use_freqs = np.flatnonzero(freqfreqs)
 

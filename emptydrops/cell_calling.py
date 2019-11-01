@@ -84,7 +84,7 @@ def simulate_multinomial_loglikelihoods(profile_p, umis_per_bc,
       log_likelihoods is a len(distinct_ns) x num_sims matrix containing the
         simulated log likelihoods.
     """
-    distinct_n = np.flatnonzero(np.bincount(umis_per_bc))
+    distinct_n = np.flatnonzero(np.bincount(umis_per_bc.astype(int)))
 
     loglk = np.zeros((len(distinct_n), num_sims), dtype=float)
     num_all_n = np.max(distinct_n) - np.min(distinct_n)
