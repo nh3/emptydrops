@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='emptydrops',
-    version='0.0.1',
+    version='0.0.2',
     author='nh3',
     author_email='nh3@users.noreply.github.com',
     description='Python implementation of emptydrops() in CellRanger v3.0.2',
@@ -15,7 +15,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'h5py',
-        'jason',
         'lz4',
         'pandas',
         'scipy',
