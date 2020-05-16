@@ -1,4 +1,5 @@
 # emptydrops
+Python implementation of emptydrops in CellRanger v3.0.2
 
 ## Disclaimer:
 All code originally comes from https://github.com/10XGenomics/cellranger with

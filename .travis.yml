@@ -3,7 +3,7 @@ python:
   - '3.6'
 
 install:
-  - pip install -U setuptools>=40.1
+  - pip install -U setuptools
   - pip install .
 
 script: python -c 'import emptydrops'
@@ -20,4 +20,3 @@ deploy:
   skip_existing: true
   on:
     tags: true
-    branch: master
