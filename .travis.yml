@@ -17,6 +17,7 @@ deploy:
   password:
     secure: "g+crPjqBwfpSBM4ClK38cH79cK8LzxJNo++IVYpbZDctavZLcDvsmWKA8ZY2gbA8imTjFxyYItl5hT/g8g07/IJdb9JvxUGoxgqpOxX0yum18teG7Sdl0WNOaLf+4yzjxd7AZP2Yj+HtvkXSplF2QZfqayy4CvnU+Wwgpn/iqSvpcQc/k2ZMFKTqWgMHNkA5FJDvFwhcDmbwSO1B1Fcl/adRIT47QXq3DYW43LI7BEhh806jYsHzjp4YCoCq+CkVDBrNM+4yX7E7J6uqemb48XCQGbv0RKQ3iope2uHe20rnxtEUOZ+29s5MrgvepHnJxBg9Fgi9bS7w7A/3snhi7IRZ6hcqsMa8mQeV75/byFb+mZUmisjkn6sLqmSf24K1CjY4aDfh22Lr6HImQap1A77dPUL0v/YzSHxO6+AfV1au3C6CWLl71gvGw4ymt95QL5V9MMSnMopaFdFuN/s7XU6EQ0urBJfZ5MeePGTfsZ3UmVvyLhTcGj4q7RcNXb40UIfNCJZe6Xdf/WT9hyUw6g+awvU8yI8Vy2OvHfb3a4MVJzkhdsfoHvdpz2nVVk6/tFpJhfz1Lpx9QyRC6/8ZMyiDH8QoaJNBgu1lfhfemC2WPZKxyJjBRFlywjlbGsTYFt8ZqKt8TqAllwSYetCH516iHjw5YI+bt4A1MUvk2nk="
   distributions: "sdist bdist_wheel"
+  skip_existing: true
   on:
     tags: true
     branch: master
