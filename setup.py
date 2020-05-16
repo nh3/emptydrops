@@ -14,6 +14,10 @@ setup(
     url='https://github.com/nh3/emptydrops',
     packages=find_packages(),
     install_requires=[
+        'h5py',
+        'jason'
+        'lz4',
+        'pandas',
         'scipy',
     ],
 )
