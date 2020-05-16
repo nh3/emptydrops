@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'h5py',
-        'jason'
+        'jason',
         'lz4',
         'pandas',
         'scipy',
