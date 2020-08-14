@@ -1,5 +1,5 @@
 # emptydrops
-Python implementation of emptydrops in CellRanger v3.0.2
+Python implementation of emptydrops-like cell calling as in CellRanger v3.0.2
 
 ## Disclaimer:
 All code originally comes from https://github.com/10XGenomics/cellranger with
@@ -24,7 +24,7 @@ find_nonambient_barcodes(
 Returns:
 ```
 [
-    'eval_bcs',      # Candidate barcode indices (n)
+    'eval_bcs',      # Candidate barcode indices in addition to those in `orig_cell_bcs` (n)
     'log_likelihood',# Ambient log likelihoods (n)
     'pvalues',       # pvalues (n)
     'pvalues_adj',   # B-H adjusted pvalues (n)
