@@ -22,7 +22,7 @@ N_PARTITIONS=90000
 MAX_OCCUPIED_PARTITIONS_FRAC = 0.5
 
 # Minimum number of UMIS per barcode to consider after the initial cell calling
-MIN_UMIS = 500
+MIN_UMIS = 1000
 
 # Minimum ratio of UMIs to the median (initial cell call UMI) to consider after the initial cell calling
 MIN_UMI_FRAC_OF_MEDIAN = 0.01
