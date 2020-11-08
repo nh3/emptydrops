@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='emptydrops',
-    version='0.0.3',
+    version='0.0.4',
     author='nh3',
     author_email='nh3@users.noreply.github.com',
     description='Python implementation of emptydrops() in CellRanger v3.0.2',
