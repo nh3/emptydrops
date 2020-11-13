@@ -74,9 +74,9 @@ def save_features_tsv(feature_ref, base_dir, compress, legacy=True):
             out_features_fn += '.gz'
         with open_maybe_gzip(out_features_fn, 'w') as f:
             for feature_def in feature_ref.feature_defs:
-                f.write('\t'.join((feature_def.id,
+                f.write(('\t'.join((feature_def.id,
                                    feature_def.name,
-                                   feature_def.feature_type)) + '\n')
+                                   feature_def.feature_type)) + '\n').encode('ascii'))
 
 
 class CountMatrix(object):
@@ -159,7 +159,7 @@ class CountMatrix(object):
 
         feature_ref = FeatureReference(feature_defs, [])
 
-        matrix = sp_io.mmread(matrix_mtx)
+        matrix = sp_io.mmread(matrix_mtx).tocsc()
         mat = CountMatrix(feature_ref, barcodes, matrix)
         return mat
 
@@ -276,7 +276,7 @@ class CountMatrix(object):
         metadata_str = json.dumps(metadata)
         comment = '' if legacy else 'metadata_json: %s' % metadata_str
 
-        with open_maybe_gzip(out_matrix_fn, 'wb') as stream:
+        with open_maybe_gzip(out_matrix_fn, 'w') as stream:
             # write initial header line
             stream.write(np.compat.asbytes('%%MatrixMarket matrix {0} {1} {2}\n'.format(rep, field, symmetry)))
 
@@ -293,6 +293,6 @@ class CountMatrix(object):
         # both GEX and ATAC provide an implementation of this in respective feature_ref.py
         save_features_func(self.feature_ref, base_dir, compress=compress, legacy=legacy)
 
-        with open_maybe_gzip(out_barcodes_fn, 'wb') as f:
+        with open_maybe_gzip(out_barcodes_fn, 'w') as f:
             for bc in self.bcs:
                 f.write(bc + b'\n')
